@@ -16,6 +16,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "moviereview.settings")
 application = get_wsgi_application()
 # application = DjangoWhiteNoise(application)
 
-from whitenoise.django import DjangoWhiteNoise
+# from whitenoise.django import DjangoWhiteNoise
 
-application = DjangoWhiteNoise(get_wsgi_application())
+# application = DjangoWhiteNoise(get_wsgi_application())
