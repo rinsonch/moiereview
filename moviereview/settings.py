@@ -25,7 +25,7 @@ SECRET_KEY = 'tx-n$h@z=zpvxglf=iydinr)s=i2kw!dyi2ct5ugio*f9upo&g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','moviereview-react.herokuapp.com']
 
 
 # Application definition
