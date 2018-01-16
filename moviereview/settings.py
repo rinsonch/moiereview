@@ -82,27 +82,27 @@ WSGI_APPLICATION = 'moviereview.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'reviewsite',
-        'USER': 'reviewuser',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'd8jdkgvdjutan3',
-#         'USER': 'zlunzupimgiamz',
-#         'PASSWORD': '7836ecdc7e975a19e4ee55c764670826e118fa18b1a61fb0128264ea3fd157ef',
-#         'HOST': 'ec2-50-19-126-219.compute-1.amazonaws.com',
-#         'PORT': '5432',
+#         'NAME': 'reviewsite',
+#         'USER': 'reviewuser',
+#         'PASSWORD': 'password',
+#         'HOST': 'localhost',
+#         'PORT': '',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd8jdkgvdjutan3',
+        'USER': 'zlunzupimgiamz',
+        'PASSWORD': '7836ecdc7e975a19e4ee55c764670826e118fa18b1a61fb0128264ea3fd157ef',
+        'HOST': 'ec2-50-19-126-219.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}
 
 
 # Internationalization

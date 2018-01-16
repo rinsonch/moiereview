@@ -268,7 +268,7 @@ class App2 extends React.Component
         var dataas=this.state.displayeddata
         var sentdata=[]
         var index={}
-        if(val=='2013'||val=='2017'||val=='2018') {
+        if(val=='2013'||val=='2017'||val=='2018'||val=='2016'||val=='2015') {
             for (index in dataas) {
                 if ((!!dataas[index] && typeof(dataas[index]) == "object")) {
                     if (val == dataas[index].date.slice(0, 4).toString()) {
