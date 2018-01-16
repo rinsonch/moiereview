@@ -4,9 +4,9 @@
     <data-source source="LOCAL" name="Django default" uuid="7c332b33-ec89-4a24-966e-4e997ba16e4c">
       <driver-ref>postgresql</driver-ref>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://ec2-50-19-126-219.compute-1.amazonaws.com:5432/d8jdkgvdjutan3</jdbc-url>
-      <user-name>zlunzupimgiamz</user-name>
-      <user-password>df9ddf92df99df9cdfcfdfc9dfcedfc9df9ddfcfdf93df9ddf9fdfcbdf9bdf93dfcfdf9edfcfdfcfdf9fdf9fdfc9df9ddf9cdf9edf9cdf9ddf9adf92df98df9cdfcfdf9bdf9bdf92dfccdfcbdf9bdf92dfc8df9bdfcbdf9cdf9bdfccdfc8df9adf9bdf98df92df98df9cdf9edfcfdfcbdf99dfccdfcedf9bdf9fdf9ddfcfdfcc</user-password>
+      <jdbc-url>jdbc:postgresql://127.0.0.1/reviewsite</jdbc-url>
+      <user-name>reviewuser</user-name>
+      <user-password>dfdadfcbdfd9dfd9dfdddfc5dfd8dfce</user-password>
       <libraries />
     </data-source>
   </component>

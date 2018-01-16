@@ -1629,6 +1629,7 @@ ul.arrow {
         display: block;
         width: 100%;
         max-width: 100%;
+        border: 5px solid #fff;
         height: 340px;
         -webkit-transition: .3s ease;
                 transition: .3s ease; }

@@ -1629,6 +1629,7 @@ ul.arrow {
       border: 1px solid transparent; }
       .movie-list .movie .movie-poster img {
         display: block;
+          border: 5px solid #fff;
         width: 100%;
         max-width: 100%;
         height: 340px;
