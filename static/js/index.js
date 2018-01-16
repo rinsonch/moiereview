@@ -5,7 +5,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import $ from 'jquery';
 
-//import { withRouter } from 'react-router-dom'
 
 
 function get(id){
@@ -18,16 +17,6 @@ function get(id){
 
     }
 
-//function getin() {
-//    document.getElementById("home").className = "menu-item";
-//    document.getElementById("review").className = "menu-item current-menu-item";
-//    document.getElementById("home").style.display = "none";
-//        var ev=document.createEvent('Event');
-//        ev.initEvent('disp',true,true);
-//
-//
-//        document.dispatchEvent(ev);
-//}
 
 class App1 extends React.Component{
 
@@ -161,7 +150,6 @@ class App2 extends React.Component
     var prevnum=this.state.currentPage
     document.getElementById(Number(prevnum)).className = "page-number";
     document.getElementById(Number(param)).className = "page-number current";
-
     this.setState({
       currentPage: Number(param)
     })
@@ -241,30 +229,28 @@ class App2 extends React.Component
 }
     change(event){
 
-    var sel=event.target.value.toString()
+    var selection=event.target.value.toString()
     var dataas=this.state.datacopy
     var sentdata=[]
-    var i={}
-    var j={}
-    var k={}
-    for (i in dataas) {
-        if ((!!dataas[i] && typeof(dataas[i])=="object")) {
-            k=dataas[i].date.slice(0,4).toString()
-            for(j in dataas[i].category){
-
-                if(dataas[i].category[j]==sel || k==sel){
-
-                    sentdata.push(dataas[i])
+    var index={}
+    var temp={}
+    var years={}
+    for (index in dataas) {
+        if ((!!dataas[index] && typeof(dataas[index])=="object")) {
+            years=dataas[index].date.slice(0,4).toString()
+            for(temp in dataas[index].category){
+                if(dataas[index].category[temp]==selection || years==selection){
+                    sentdata.push(dataas[index])
                     break
                 }
             }
 
-            i++
+            index++
         }
     }
     var prev=this.state.select.toString()
-    this.state.select=sel
-    if(sel=='1'||sel=='2'||sel=='3'||sel=='4') {
+    this.state.select=selection
+    if(selection=='1'||selection=='2'||selection=='3'||selection=='4') {
         this.setState({data: sentdata,displayeddata:sentdata,date:'select', select: event.target.value, currentPage: 1})
     }
     else{
@@ -370,7 +356,7 @@ if(currentTodos){
     }
         var years=uniqueyear.map(function(year){
             return(
-<option value={year}>{year}</option>
+                <option value={year}>{year}</option>
                 )
         })
 
@@ -472,11 +458,11 @@ if(currentTodos){
 
 
 function getin() {
- document.getElementById("home").className = "menu-item";
- document.getElementById("homecontent").style.display = "none";
-     document.getElementById("maincontent").style.display = "none";
-    history.pushState({},"","#/moviereviews")
-     document.getElementById("review").className = "menu-item current-menu-item";
+        document.getElementById("home").className = "menu-item";
+        document.getElementById("homecontent").style.display = "none";
+        document.getElementById("maincontent").style.display = "none";
+        history.pushState({},"","#/moviereviews")
+        document.getElementById("review").className = "menu-item current-menu-item";
         var ev=document.createEvent('Event');
         ev.initEvent('disp',true,true);
         document.dispatchEvent(ev);
