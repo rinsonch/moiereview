@@ -14,7 +14,6 @@ django-idmap==1.0
 django-vanilla-views==1.0.4
 django-webpack-loader==0.2.4
 djangorestframework==3.3.2
-gunicorn==19.7.1
 honcho==0.7.1
 huey==1.2.0
 IPy==0.83
@@ -42,4 +41,3 @@ whitenoise==3.2.1
 ws4py==0.3.5
 XlsxWriter==0.9.3
 zope.interface==4.2.0
-

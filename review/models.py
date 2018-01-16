@@ -17,7 +17,7 @@ class Movies(models.Model):
         ('Ho','Horror'),
         ('Co','Comedy'),
     )
-
+    id=models.AutoField(primary_key=True)
     title=models.CharField(max_length=200)
     description=models.CharField(max_length=300)
     rating=models.IntegerField(default=3)
@@ -29,7 +29,6 @@ class Movies(models.Model):
     stars=models.CharField(max_length=200)
     review=models.CharField(max_length=2000)
     image=models.URLField()
-    # image=models.ImageField(upload_to='media/')
 
     def __str__(self):
         return self.title

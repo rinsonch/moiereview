@@ -13,7 +13,6 @@ app_name='review'
 
 urlpatterns = [
     url(r'^$',Index.as_view(),name='index'),
-
         ]
 
 # urlpatterns += ('',

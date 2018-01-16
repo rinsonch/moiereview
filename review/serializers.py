@@ -9,4 +9,4 @@ from rest_framework import serializers
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movies
-        fields = ('title', 'description','date', 'rating', 'length','category','directors','writers','stars','review','image')
+        fields = ('id','title', 'description','date', 'rating', 'length','category','directors','writers','stars','review','image')

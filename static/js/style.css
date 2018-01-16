@@ -1575,7 +1575,9 @@ ul.arrow {
 .page figure {
   margin-bottom: 30px; }
 .page img {
-  max-width: 100%; }
+  max-width: 100%;
+}
+
 .page .movie-title {
   font-size: 36px;
   font-size: 2.4em;
@@ -1604,6 +1606,7 @@ ul.arrow {
     width: 25%;
     padding: 0 15px;
     float: left;
+      height:520px;
     margin-bottom: 30px; }
     @media screen and (min-width: 991px) {
       .movie-list .movie:nth-child(4n+1) {
@@ -1628,7 +1631,7 @@ ul.arrow {
         display: block;
         width: 100%;
         max-width: 100%;
-        height: auto;
+        height: 340px;
         -webkit-transition: .3s ease;
                 transition: .3s ease; }
     .movie-list .movie:hover img {
