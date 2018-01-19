@@ -72,7 +72,7 @@ def sendmail(request):
         website=" "
     message=request.GET.get("message")
     name=request.GET.get("name")
-    body="Mail:\n"+mail+"\n"+"Website:"+website+"\n"+"Message:"+message
+    body="Mail:"+mail+"\n"+"Website:"+website+"\n"+"Message:"+message
     email = EmailMessage("Contacted by "+name, body, to=['moviereviewrin@gmail.com'])
     email.send()
     return HttpResponse("The team will contact you shortly")
@@ -98,6 +98,7 @@ def sortbycategory(request):
 def sortbyyear(request):
     category=request.GET.get("category")
     year=request.GET.get("year")
+
     if(category=='select'):
         if(year=='year'):
             movieids=Movies.objects.values_list('id', flat=True)
