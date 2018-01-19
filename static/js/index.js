@@ -225,6 +225,7 @@ class App2 extends React.Component
 }
     change(event){
     var selection=event.target.value.toString()
+
      $.ajax({
             url: "/sortbycategory/",
             datatype: 'text/plain',
