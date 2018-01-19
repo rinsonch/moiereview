@@ -72,7 +72,7 @@ def sendmail(request):
         website=" "
     message=request.GET.get("message")
     name=request.GET.get("name")
-    body="Mail:"+mail+"\n"+"Website:"+website+"\n"+"Message:"+message
+    body="Mail:\n"+mail+"\n"+"Website:"+website+"\n"+"Message:"+message
     email = EmailMessage("Contacted by "+name, body, to=['moviereviewrin@gmail.com'])
     email.send()
     return HttpResponse("The team will contact you shortly")
