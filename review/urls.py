@@ -13,6 +13,11 @@ app_name='review'
 
 urlpatterns = [
     url(r'^$',Index.as_view(),name='index'),
+    url(r'^mail/$',views.sendmail,name='emailsending'),
+    url(r'^obtainids/$',views.obtainids,name='obtainids'),
+    url(r'^sortbycategory/$',views.sortbycategory),
+    url(r'^sortbyyear/$',views.sortbyyear)
+   # url(r'^movielist/$',views.user_list)
         ]
 
 # urlpatterns += ('',

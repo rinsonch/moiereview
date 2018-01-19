@@ -4,6 +4,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import $ from 'jquery';
+const logo = require('./images/icon-contact-map.png');
+const phone=require('./images/icon-contact-phone.png');
+const message=require('./images/icon-contact-message.png');
+
 
 
 
@@ -135,25 +139,23 @@ class App2 extends React.Component
     constructor(props)
     {
         super(props);
-
+        this.inputdata=this.inputdata.bind(this)
         this.hide=this.hide.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.state = {
-            shown: false,data: [], currentPage: 1,datacopy:[],
-      todosPerPage: 4,selected:false,param:[],select:'select',selected:'',displayeddata:[],idsofdata:[],datatobedisplayed:[]
+            shown: false, currentPage: 1,datacopy:[],ajax:true,
+      todosPerPage: 4,selected:false,param:[],select:'select',selected:'',displayeddata:[],idsofdata:[],datatobedisplayed:[],nameofdata:[],year:'year'
         }
-
-
     }
 
     handleClick(param,e) {
+
     var prevnum=this.state.currentPage
     document.getElementById(Number(prevnum)).className = "page-number";
     document.getElementById(Number(param)).className = "page-number current";
     this.setState({
-      currentPage: Number(param)
+      currentPage: Number(param),ajax:true
     })
-
   }
 
     showModal()
@@ -199,22 +201,16 @@ class App2 extends React.Component
         })
 
     }
+
     loadFromServer()
     {
         $.ajax({
-            url: "/api/movies.json/",
-            datatype: 'json',
+            url: "/obtainids/",
+            datatype: 'text/plain',
             cache: false,
             success: function (data) {
-                var i
-                var idsofdata=[]
-                for (i in data) {
-                if ((!!data[i] && typeof(data[i]) == "object")) {
-                        idsofdata.push(data[i].id)
-                }
-                i++
-            }
-                this.setState({data: data,datacopy:data,displayeddata:data,select:'select',date:'select',idsofdata:idsofdata})
+                var idsofdata = JSON.parse(data);
+                this.setState({select:'select',date:'select',idsofdata:idsofdata})
             }.bind(this)
         })
     }
@@ -228,35 +224,17 @@ class App2 extends React.Component
 
 }
     change(event){
-
     var selection=event.target.value.toString()
-    var dataas=this.state.datacopy
-    var sentdata=[]
-    var index={}
-    var temp={}
-    var years={}
-    for (index in dataas) {
-        if ((!!dataas[index] && typeof(dataas[index])=="object")) {
-            years=dataas[index].date.slice(0,4).toString()
-            for(temp in dataas[index].category){
-                if(dataas[index].category[temp]==selection || years==selection){
-                    sentdata.push(dataas[index])
-                    break
-                }
-            }
-
-            index++
-        }
-    }
-    var prev=this.state.select.toString()
-    this.state.select=selection
-    if(selection=='1'||selection=='2'||selection=='3'||selection=='4') {
-        this.setState({data: sentdata,displayeddata:sentdata,date:'select', select: event.target.value, currentPage: 1})
-    }
-    else{
-
-        this.setState({data: this.state.datacopy,displayeddata:dataas,date:'select',select:this.state.select, currentPage: 1})
-    }
+     $.ajax({
+            url: "/sortbycategory/",
+            datatype: 'text/plain',
+            cache: false,
+            data:{'year':'year','category':selection},
+            success: function (data) {
+                var idsofdata = JSON.parse(data);
+                this.setState({select:selection,year:'year',idsofdata:idsofdata,ajax:true,currentPage:1})
+            }.bind(this)
+        })
 
 }
     hidereview(){
@@ -264,24 +242,21 @@ class App2 extends React.Component
     history.pushState({},"","#/moviereviews/")
 }
     year(event){
-        var val=event.target.value.toString()
-        var dataas=this.state.displayeddata
-        var sentdata=[]
-        var index={}
-        if(val=='2013'||val=='2017'||val=='2018'||val=='2016'||val=='2015') {
-            for (index in dataas) {
-                if ((!!dataas[index] && typeof(dataas[index]) == "object")) {
-                    if (val == dataas[index].date.slice(0, 4).toString()) {
-                        sentdata.push(dataas[index])
-                    }
-                }
-                index++
-            }
-            this.setState({date:event.target.value,data:sentdata,currentPage:1})
-        }
-    else{
-            this.setState({date:val,data:dataas,currentPage:1})
-        }
+    var yearselected=event.target.value.toString()
+    $.ajax({
+            url: "/sortbyyear/",
+            datatype: 'text/plain',
+            cache: false,
+            data:{'year':yearselected,'category':this.state.select},
+            success: function (data) {
+                if(data){
+                var idsofdata = JSON.parse(data);
+                this.setState({select:this.state.select,year:yearselected,idsofdata:idsofdata,ajax:true,currentPage:1})}
+                else{
+                    this.setState({select:this.state.select,year:yearselected,idsofdata:[],ajax:true,currentPage:1})}
+
+            }.bind(this)
+        })
 }
 
     componentDidMount()
@@ -289,8 +264,6 @@ class App2 extends React.Component
         document.addEventListener('disp', function (e) {
             this.showModal()
             this.loadFromServer()
-
-
         }.bind(this), false)
     }
     componentWillUpdate(){
@@ -306,7 +279,15 @@ class App2 extends React.Component
     }
 
 }
-
+  APIres (ids) {
+    Promise.all(ids.map(id => fetch('/api/movies/' + id).then(resp => resp.json().then(data => data))
+    )).then(data => {
+      this.inputdata(data)
+    })
+  }
+inputdata(data){
+    this.setState({nameofdata:data,ajax:false})
+}
     render()
     {
         var dataas=this.state.datacopy
@@ -324,18 +305,28 @@ class App2 extends React.Component
                 index++
                 }
    var uniqueyear = sentdata.filter((v, index, a) => a.indexOf(v) === index);
-            const { data, currentPage, todosPerPage } = this.state;
+            const { idsofdata, currentPage, todosPerPage } = this.state;
             const indexOfLastPage = currentPage * todosPerPage;
             const indexOfFirstPage = indexOfLastPage - todosPerPage;
-            const currentTodos = data.slice(indexOfFirstPage, indexOfLastPage);
+            const currentTodos = idsofdata.slice(indexOfFirstPage, indexOfLastPage);
             const pageNumbers = [];
-            for (let i = 1; i <= Math.ceil(data.length / todosPerPage); i++) {
+            for (let i = 1; i <= Math.ceil(idsofdata.length / todosPerPage); i++) {
                 pageNumbers.push(i);
             }
-
-if(currentTodos){
-    var movieNodes=currentTodos.map(function(movie){
-
+        if(currentTodos.length!==0) {
+            if (this.state.ajax) {
+                var x = []
+                var index = 0;
+                var results = []
+                var array = []
+                for (var j in currentTodos) {
+                    array.push(currentTodos[j])
+                }
+                this.APIres(array);
+            }
+        }
+if(currentTodos.length!=0){
+    var movieNodes=this.state.nameofdata.map(function(movie){
     return(
         <div class="movie" key={movie.id}>
             <figure class="movie-poster">
@@ -354,11 +345,7 @@ if(currentTodos){
             return(<div><h1>No Movies</h1></div>)
         }
     }
-        var years=uniqueyear.map(function(year){
-            return(
-                <option value={year}>{year}</option>
-                )
-        })
+
 
 
         var renderPageNumbers = pageNumbers.map(function(number){
@@ -374,7 +361,7 @@ if(currentTodos){
         const value=this.state.selected
         if (states) {
             return(
-                <div class="container">
+                <div class="container" id="moviereview">
 					<div class="page">
 						<div class="breadcrumbs">
 							<a onClick={this.hide}>Home</a>
@@ -389,9 +376,11 @@ if(currentTodos){
 								<option value="3">Comedy</option>
 								<option value="2">Adventure</option>
 							</select>
-							<select name="#" id="year" value={this.state.date} onChange={this.year.bind(this)}>
-                                <option value="select">Select year</option>
-                            {years}
+							<select name="#" id="year" value={this.state.year} onChange={this.year.bind(this)}>
+                                <option value="year">select</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
 							</select>
 						</div>
                         <div class="movie-list">
@@ -406,7 +395,7 @@ if(currentTodos){
 
         else if(value){
             return(
-                <main class="main-content">
+                <main class="main-content" id="moviereviewdetails">
 				<div class="container">
 					<div class="page">
 						<div class="breadcrumbs">
@@ -455,19 +444,150 @@ if(currentTodos){
     }
 }
 
+class Contact extends React.Component{
+    constructor(props) {
+    super(props)
+        this.showContactForm=this.showContactForm.bind(this)
+        this.submit=this.submit.bind(this)
+        this.state={showcontactform:false,name:'',message:'',email:'',website:''}
+}
+showContactForm(){
+        this.setState({showcontactform:true})
+    }
+    componentDidMount(){
+        document.addEventListener('displaycontact', function (e) {
+        this.showContactForm()
+        }.bind(this), false)
+    }
 
+submit(){
+    var name=this.state.name
+    var email=this.state.email
+    var message=this.state.message
+    var website=this.state.website
+    if((!(/\S+@\S+\.\S+/.test(email.toString())))&&(name===""||message==="")){
+        alert("Enter full details")
+    }
+    else if(!(/\S+@\S+\.\S+/.test(email.toString()))){
+        alert("Enter valid  email")
+    }
+    else {
+        if (name === "" || email === "" || message === "") {
+            alert("please enter the required fields")
+        }
+        else {
+             this.setState({name: '', email: '', message: '', website: ''})
+            $.ajax({
+
+                url: "/" + "mail/",
+                datatype: 'text/plain',
+                data: {'name': name, 'email': email, 'message': message, 'website': website},
+                cache: false,
+                success: function (data) {
+                    alert(data)
+
+                }.bind(this),
+                error: function (error) {
+                }
+            })
+        }
+    }
+
+}
+    render(){
+        if(this.state.showcontactform) {
+            return(<div id="contact">
+                <main class="main-content">
+				<div class="container">
+					<div class="page">
+					<div class="content">
+							<div class="row">
+								<div class="col-md-4">
+									<h2>Contact</h2>
+									<ul class="contact-detail">
+										<li>
+											<img src={logo} alt="#"/>
+											<address><span>Company name. INC</span> <br/>550 Avenue Street, New york</address>
+										</li>
+										<li>
+											<img src={phone} alt=""/>
+											<a href="tel:1590912831">+1 590 912 831</a>
+										</li>
+										<li>
+											<img src={message} alt=""/>
+											<a href="mailto:contact@companyname.com">contact@companyname.com</a>
+										</li>
+									</ul>
+									<div class="contact-form">
+                                        <form >
+										<input type="text" class="name" placeholder="name..." onChange={e=>this.setState({name:e.target.value})} value={this.state.name} required/>
+										<input type="email" class="email" placeholder="email..." onChange={e=>this.setState({email:e.target.value})} value={this.state.email} required/>
+										<input type="text" class="website" placeholder="website..." onChange={e=>this.setState({website:e.target.value})} value={this.state.website}/>
+										<textarea class="message" placeholder="message..." onChange={e=>this.setState({message:e.target.value})} value={this.state.message} required></textarea>
+										<input type="button"  value="Send Message" onClick={this.submit}/>
+                                        </form>
+									</div>
+								</div>
+								<div class="col-md-7 col-md-offset-1">
+									<div class="map"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+
+            </div>)
+        }
+        else{
+            return(<div></div>)
+        }
+    }
+}
 
 function getin() {
         document.getElementById("home").className = "menu-item";
+        document.getElementById("contactform").className = "menu-item";
         document.getElementById("homecontent").style.display = "none";
         document.getElementById("maincontent").style.display = "none";
+    if(document.getElementById("moviereview")) {
+        document.getElementById("moviereview").style.display = "block";
+    }
         history.pushState({},"","#/moviereviews")
+    if(document.getElementById("contact")) {
+        document.getElementById("contact").style.display = "none";
+    }
         document.getElementById("review").className = "menu-item current-menu-item";
         var ev=document.createEvent('Event');
         ev.initEvent('disp',true,true);
         document.dispatchEvent(ev);
 }
+function contact(){
+    document.getElementById("home").className = "menu-item";
+    if(document.getElementById("homecontent")) {
+        document.getElementById("homecontent").style.display = "none";
+    }
+    if(document.getElementById("maincontent")) {
+        document.getElementById("maincontent").style.display = "none";
+    }
+    if(document.getElementById("moviereviewdetails")) {
+        document.getElementById("moviereviewdetails").style.display = "none";
+    }
+    if(document.getElementById("moviereview")) {
+        document.getElementById("moviereview").style.display = "none";
+    }
+     if(document.getElementById("contact")) {
+        document.getElementById("contact").style.display = "block";
+    }
+
+    document.getElementById("review").className = "menu-item ";
+    document.getElementById("contactform").className = "menu-item current-menu-item";
+    var contactevent=document.createEvent('Event');
+    history.pushState({},"","/#contact")
+    contactevent.initEvent('displaycontact',true,true);
+    document.dispatchEvent(contactevent)
+}
 
 
-ReactDOM.render(<div><App2/><App1></App1></div>,
+ReactDOM.render(<div><App2/><App1></App1><Contact/></div>,
     document.getElementById('movies'))

@@ -18,9 +18,14 @@ module.exports = {
 
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
-      { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/,query: {
+        presets: ['es2015']
+    } },
+      { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/,query: {
+        presets: ['es2015']
+    } },
       { test: /\.css$/,loader: "style-loader",loader: "css-loader" ,options: { url: false }, exclude: /node_modules/ },
+        { test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192' },
     ]
   },
 

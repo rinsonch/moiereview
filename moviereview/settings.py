@@ -92,6 +92,11 @@ WSGI_APPLICATION = 'moviereview.wsgi.application'
 #         'PORT': '',
 #     }
 # }
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'moviereviewrin@gmail.com'
+EMAIL_HOST_PASSWORD = 'rin@2532'
 
 DATABASES = {
     'default': {
@@ -104,6 +109,11 @@ DATABASES = {
     }
 }
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

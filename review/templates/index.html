@@ -35,8 +35,7 @@
 							<h1 class="site-title">Company Name</h1>
 							<small class="site-description">Tagline goes here</small>
 						</div>
-					</a> <!-- #branding -->
-
+					</a>
 					<div class="main-navigation">
 						<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
 						<ul class="menu">
@@ -44,15 +43,13 @@
 							<li  class="menu-item"><a href="#">About</a></li>
 							<li id="review" class="menu-item"><a onclick="getin()">Movie reviews</a></li>
 							<li class="menu-item"><a href="#">Join us</a></li>
-							<li class="menu-item"><a href="#">Contact</a></li>
-						</ul> <!-- .menu -->
-
+							<li id="contactform" class="menu-item"><a onclick="contact()">Contact</a></li>
+						</ul>
 						<form action="#" class="search-form" >
 							<input type="text" placeholder="Search...">
 							<button><i class="fa fa-search"></i></button>
 						</form>
-					</div> <!-- .main-navigation -->
-
+					</div>
 					<div class="mobile-navigation"></div>
 				</div>
 			</header>
@@ -99,7 +96,7 @@
 										<h2 class="entry-title"><a onclick="get({{ i.id }})">{{ i.title}}</a></h2>
 									</li>
                                     {%  endfor %}
-								</ul> <!-- .movie-schedule -->
+								</ul>
 							</div>
 							<div class="col-md-4">
 								<h2 class="section-title">{{ prevmonthname }} premiere</h2>
@@ -111,7 +108,7 @@
 										<h2 class="entry-title"><a onclick="get({{ i.id }})">{{ i.title }}</a></h2>
 									</li>
                                     {% endfor %}
-								</ul> <!-- .movie-schedule -->
+								</ul>
 							</div>
 							<div class="col-md-4">
 								<h2 class="section-title">{{ nowmonthname }} Premiere</h2>
@@ -123,11 +120,11 @@
 										<h2 class="entry-title"><a onclick="get({{ i.id }})">{{ i.title }}</a></h2>
 									</li>
 									{%  endfor %}
-								</ul> <!-- .movie-schedule -->
+								</ul>
 							</div>
 						</div>
 					</div>
-				</div> <!-- .container -->
+				</div>
 			</main>
         </div>
 
