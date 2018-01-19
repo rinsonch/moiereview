@@ -17,7 +17,6 @@ urlpatterns = [
     url(r'^obtainids/$',views.obtainids,name='obtainids'),
     url(r'^sortbycategory/$',views.sortbycategory),
     url(r'^sortbyyear/$',views.sortbyyear)
-   # url(r'^movielist/$',views.user_list)
         ]
 
 # urlpatterns += ('',

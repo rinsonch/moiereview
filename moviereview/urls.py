@@ -21,6 +21,7 @@ from review import views
 
 router = routers.DefaultRouter()
 router.register(r'movies', views.MovieViewSet)
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^',include('review.urls')),
