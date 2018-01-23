@@ -515,15 +515,15 @@ submit(){
 function getin() {
         document.getElementById("home").className = "menu-item";
         document.getElementById("contactform").className = "menu-item";
-        document.getElementById("homecontent").style.display = "none";
-        document.getElementById("maincontent").style.display = "none";
+    if(document.getElementById("homecontent")){
+        document.getElementById("homecontent").style.display = "none";}
+    if(document.getElementById("maincontent")){
+        document.getElementById("maincontent").style.display = "none";}
     if(document.getElementById("moviereview")) {
-        document.getElementById("moviereview").style.display = "block";
-    }
+        document.getElementById("moviereview").style.display = "block";}
         history.pushState({},"","#/moviereviews")
     if(document.getElementById("contact")) {
-        document.getElementById("contact").style.display = "none";
-    }
+        document.getElementById("contact").style.display = "none"; }
         document.getElementById("review").className = "menu-item current-menu-item";
         var ev=document.createEvent('Event');
         ev.initEvent('disp',true,true);
