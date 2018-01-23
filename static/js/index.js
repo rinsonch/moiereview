@@ -139,12 +139,11 @@ class App2 extends React.Component
     constructor(props)
     {
         super(props);
-        this.inputdata=this.inputdata.bind(this)
         this.hide=this.hide.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.state = {
-            shown: false, currentPage: 1,datacopy:[],ajax:true,
-      todosPerPage: 4,selected:false,param:[],select:'select',selected:'',displayeddata:[],idsofdata:[],datatobedisplayed:[],nameofdata:[],year:'year'
+            shown: false, currentPage: 1,totalpages:'',
+      todosPerPage: 3,selected:false,param:[],select:'select',selected:'',nameofdata:[],year:'year'
         }
     }
 
@@ -153,9 +152,16 @@ class App2 extends React.Component
     var prevnum=this.state.currentPage
     document.getElementById(Number(prevnum)).className = "page-number";
     document.getElementById(Number(param)).className = "page-number current";
-    this.setState({
-      currentPage: Number(param),ajax:true
-    })
+    var page=param
+        $.ajax({
+            url: "/movielist/?page="+page+"&format=json",
+            datatype: 'json',
+            cache: false,
+            data:{'year':this.state.year,'category':this.state.select},
+            success: function (data) {
+                this.setState({nameofdata:data.results,currentPage:Number(param)})
+            }.bind(this)
+        })
   }
 
     showModal()
@@ -204,13 +210,15 @@ class App2 extends React.Component
 
     loadFromServer()
     {
+       var page=this.state.currentPage
         $.ajax({
-            url: "/obtainids/",
-            datatype: 'text/plain',
+            url: "/movielist/?page=1&format=json",
+            datatype: 'json',
             cache: false,
+            data:{'year':'year','category':'select'},
             success: function (data) {
-                var idsofdata = JSON.parse(data);
-                this.setState({select:'select',date:'select',idsofdata:idsofdata})
+                this.setState({nameofdata:data.results,totalpages:data.count,year:'year',select:'select',currentPage:1})
+
             }.bind(this)
         })
     }
@@ -225,16 +233,17 @@ class App2 extends React.Component
 }
     change(event){
     var selection=event.target.value.toString()
-     $.ajax({
-            url: "/sortbycategory/",
-            datatype: 'text/plain',
+        $.ajax({
+            url: "/movielist/?page=1&format=json",
+            datatype: 'json',
             cache: false,
-            data:{'year':'year','category':selection},
+            data:{year:this.state.year,category:selection},
             success: function (data) {
-                var idsofdata = JSON.parse(data);
-                this.setState({select:selection,year:'year',idsofdata:idsofdata,ajax:true,currentPage:1})
+                this.setState({nameofdata:data.results,totalpages:data.count,select:selection,currentPage:1})
+
             }.bind(this)
         })
+
 
 }
     hidereview(){
@@ -243,21 +252,21 @@ class App2 extends React.Component
 }
     year(event){
     var yearselected=event.target.value.toString()
-    $.ajax({
-            url: "/sortbyyear/",
+    var categoryselection=this.state.select
+
+            $.ajax({
+            url: "movielist/?page=1&format=json",
             datatype: 'text/plain',
             cache: false,
-            data:{'year':yearselected,'category':this.state.select},
+            data: {'year': yearselected, 'category': categoryselection},
             success: function (data) {
-                if(data){
-                var idsofdata = JSON.parse(data);
-                this.setState({select:this.state.select,year:yearselected,idsofdata:idsofdata,ajax:true,currentPage:1})}
-                else{
-                    this.setState({select:this.state.select,year:yearselected,idsofdata:[],ajax:true,currentPage:1})}
 
+                this.setState({select: categoryselection, year: yearselected, nameofdata:data.results,totalpages:data.count, ajax: true, currentPage: 1})
             }.bind(this)
         })
-}
+    }
+
+
 
     componentDidMount()
     {
@@ -274,58 +283,21 @@ class App2 extends React.Component
 }
     componentDidUpdate(){
     let l=this.state.currentPage
+
     if(document.getElementById(Number(l))) {
         document.getElementById(Number(l)).className = "page-number current";
     }
 
 }
-  APIres (ids) {
-    Promise.all(ids.map(id => fetch('/api/movies/' + id).then(resp => resp.json().then(data => data))
-    )).then(data => {
-      this.inputdata(data)
-    })
-  }
-inputdata(data){
-    this.setState({nameofdata:data,ajax:false})
-}
+
     render()
     {
-        var dataas=this.state.datacopy
-        var sentdata=[]
-        var index={}
-        var j={}
-        var k={}
-        var v
-
-            for (index in dataas) {
-                if ((!!dataas[index] && typeof(dataas[index]) == "object")) {
-                  var yearval = dataas[index].date.slice(0, 4).toString()
-                        sentdata.push(yearval)
-                    }
-                index++
-                }
-   var uniqueyear = sentdata.filter((v, index, a) => a.indexOf(v) === index);
-            const { idsofdata, currentPage, todosPerPage } = this.state;
-            const indexOfLastPage = currentPage * todosPerPage;
-            const indexOfFirstPage = indexOfLastPage - todosPerPage;
-            const currentTodos = idsofdata.slice(indexOfFirstPage, indexOfLastPage);
-            const pageNumbers = [];
-            for (let i = 1; i <= Math.ceil(idsofdata.length / todosPerPage); i++) {
+    const totalitemlenth=this.state.totalpages
+    const pageNumbers=[]
+    var todosPerPage=this.state.todosPerPage
+    for (let i = 1; i <= Math.ceil( totalitemlenth/ todosPerPage); i++) {
                 pageNumbers.push(i);
             }
-        if(currentTodos.length!==0) {
-            if (this.state.ajax) {
-                var x = []
-                var index = 0;
-                var results = []
-                var array = []
-                for (var j in currentTodos) {
-                    array.push(currentTodos[j])
-                }
-                this.APIres(array);
-            }
-        }
-if(currentTodos.length!=0){
     var movieNodes=this.state.nameofdata.map(function(movie){
     return(
         <div class="movie" key={movie.id}>
@@ -339,12 +311,7 @@ if(currentTodos.length!=0){
         </div>
         )}.bind(this)
     )
-    }
-    else{
-        var movieNodes=function(){
-            return(<div><h1>No Movies</h1></div>)
-        }
-    }
+
 
 
 

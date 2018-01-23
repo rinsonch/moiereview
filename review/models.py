@@ -23,7 +23,7 @@ class Movies(models.Model):
     rating=models.IntegerField(default=3)
     length=models.IntegerField()
     date=models.DateField()
-    category=models.ManyToManyField(Genre,blank=True)
+    category=models.ManyToManyField(Genre,blank=True,related_name='categories')
     directors=models.CharField(max_length=250)
     writers=models.CharField(max_length=200)
     stars=models.CharField(max_length=200)

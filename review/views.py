@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from .serializers import MovieSerializer
+from .serializers import MovieSerializer,MovieListSerializer
 from .models import Movies
 from django.views.generic import ListView
 import datetime
@@ -7,8 +7,8 @@ import json
 import calendar
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
-
-
+from rest_framework import generics
+from  rest_framework import mixins
 
 
 class MovieViewSet(viewsets.ModelViewSet):
@@ -18,6 +18,36 @@ class MovieViewSet(viewsets.ModelViewSet):
 
     queryset = Movies.objects.all()
     serializer_class = MovieSerializer
+
+
+class MovieList(generics.ListAPIView):
+
+    queryset=Movies.objects.all()
+    serializer_class = MovieListSerializer
+
+    def get_queryset(self):
+        year=self.request.GET['year']
+        category=self.request.GET['category']
+        if category=='select':
+            if year=='year':
+                queryset=Movies.objects.all()
+            else:
+                queryset=Movies.objects.filter(date__year=year)
+        else:
+            if year=='year':
+                queryset=Movies.objects.filter(category=category)
+            else:
+                queryset=Movies.objects.filter(date__year=year).filter(category=category)
+        return queryset
+
+class MovieDetail(mixins.RetrieveModelMixin,
+                    generics.GenericAPIView):
+    queryset = Movies.objects.all()
+    serializer_class = MovieSerializer
+
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
 
 class Index(ListView):
@@ -76,49 +106,4 @@ def sendmail(request):
     email = EmailMessage("Contacted by "+name, body, to=['moviereviewrin@gmail.com'])
     email.send()
     return HttpResponse("The team will contact you shortly")
-
-def obtainids(request):
-    movieids=Movies.objects.values_list('id', flat=True)
-    json_string = json.dumps([ob for ob in movieids])
-    return HttpResponse(json_string)
-
-
-def sortbycategory(request):
-    category=request.GET.get("category")
-    year=request.GET.get("year")
-    if(category!= 'select' and year== 'year'):
-        movieids=Movies.objects.filter(category=category).values_list('id',flat=True)
-        json_string = json.dumps([ob for ob in movieids])
-        return HttpResponse(json_string)
-    else:
-        movieids=Movies.objects.values_list('id', flat=True)
-        json_string = json.dumps([ob for ob in movieids])
-        return HttpResponse(json_string)
-
-def sortbyyear(request):
-    category=request.GET.get("category")
-    year=request.GET.get("year")
-    print("year is ",year)
-    if(category=='select'):
-        if(year=='year'):
-            movieids=Movies.objects.values_list('id', flat=True)
-            json_string = json.dumps([ob for ob in movieids])
-            return HttpResponse(json_string)
-        else:
-            movieids=Movies.objects.filter(date__year=year).values_list('id',flat=True)
-            json_string = json.dumps([ob for ob in movieids])
-            return HttpResponse(json_string)
-    else:
-        if(category!='select' and year!='year'):
-            movieids=Movies.objects.filter(date__year=year).filter(category=category).values_list('id',flat=True)
-            print("movieids",movieids)
-            json_string = json.dumps([ob for ob in movieids])
-            return HttpResponse(json_string)
-        else:
-            movieids=Movies.objects.filter(category=category).values_list('id', flat=True)
-            json_string = json.dumps([ob for ob in movieids])
-            return HttpResponse(json_string)
-
-
-
 

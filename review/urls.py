@@ -14,10 +14,8 @@ app_name='review'
 urlpatterns = [
     url(r'^$',Index.as_view(),name='index'),
     url(r'^mail/$',views.sendmail,name='emailsending'),
-    url(r'^obtainids/$',views.obtainids,name='obtainids'),
-    url(r'^sortbycategory/$',views.sortbycategory),
-    url(r'^sortbyyear/$',views.sortbyyear)
-   # url(r'^movielist/$',views.user_list)
+    url(r'movielist/$',views.MovieList.as_view(),name='movielist'),
+    url(r'^movies/(?P<pk>[0-9]+)/$', views.MovieDetail.as_view(),name='movie-detail'),
         ]
 
 # urlpatterns += ('',
